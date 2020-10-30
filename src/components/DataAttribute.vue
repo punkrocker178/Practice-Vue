@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <span class="item">{{ attr }}</span>
-    <span v-if="hasChildren"><i class="fa fa-angle-up"></i></span>
+    <span v-on:click="toggleBtn($event)" v-if="hasChildren"
+      ><i data-toggle="false" class="fa fa-angle-down"></i
+    ></span>
     <div v-if="hasChildren" class="children" :id="`children-${attr}`">
       <data-attribute
         v-for="(at, index) in value"
@@ -36,6 +38,19 @@ export default class DataAttribute extends Vue {
       this.hasChildren = true;
     }
   }
+
+  toggleBtn(event) {
+    const el = event.target;
+    const attr = event.target.attributes["data-toggle"];
+
+    if (attr && attr.value === "true") {
+      el.className = "fa fa-angle-down";
+      attr.value = "false";
+    } else {
+      el.className = "fa fa-angle-up";
+      attr.value = "true";
+    }
+  }
 }
 </script>
 <style scoped lang="less">
@@ -53,5 +68,8 @@ export default class DataAttribute extends Vue {
   // flex-direction: row;
   max-width: 300px;
   text-align: start;
+}
+.hidden {
+  display: none;
 }
 </style>
