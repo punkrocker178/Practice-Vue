@@ -11,7 +11,13 @@
         v-on:keyup.enter="callApi"
       />
     </div>
+
+    <div v-show="isLoading">
+      <i class="fa fa-spinner custom-spinner" aria-hidden="true"></i>
+    </div>
+
     <data-attribute
+      v-show="!isLoading"
       v-for="(attr, index) of attributes"
       v-bind:key="`${index}`"
       v-bind="attributes"
@@ -32,34 +38,37 @@ import DataAttribute from "./DataAttribute.vue";
 })
 export default class DataParser extends Vue {
   attributes: any;
+  isLoading: boolean;
   url: string;
-  
+
   data() {
     return {
       attributes: this.attributes,
+      isLoading: this.isLoading,
       url: this.url
     };
   }
 
   callApi(event) {
+    this.isLoading = true;
     const res = this.getData(this.url);
-    res.then(data => {
-      this.attributes = data;
-    }).catch(e => {
-      console.error(e);
-    });
+    res
+      .then(data => {
+        this.isLoading = false;
+        this.attributes = data;
+      })
+      .catch(e => {
+        console.error(e);
+      });
   }
 
   async getData(url: string) {
-    const res = await fetch(
-      url,
-      {
-        headers: {
-          "Content-Type": "application/json"
-        },
-        method: "GET"
-      }
-    );
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "GET"
+    });
     return res.json();
   }
 }
@@ -68,15 +77,34 @@ export default class DataParser extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 .container {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
 }
 .input {
   width: 50%;
   border-radius: 4px;
   margin-bottom: 1rem;
   padding: 0.5rem;
+}
+
+.custom-spinner {
+  font-size: 40px;
+}
+
+.fa-spinner::before {
+  animation: spinner 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
