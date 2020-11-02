@@ -37,7 +37,6 @@ export default class DataAttribute extends Vue {
   }
 
   created() {
-    console.log(this.value);
     if (this.value && typeof this.value === "object") {
       this.hasChildren = true;
     }

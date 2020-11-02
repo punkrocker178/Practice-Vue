@@ -1,4 +1,7 @@
-# app
+# Simple tree viewer on VueJS
+
+A really simple project showing data structure from JSON response from any api.  
+The app will fetch data from url input. URL must be an api return JSON response, also with allowed CORS.
 
 ## Project setup
 ```
